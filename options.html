@@ -1,0 +1,82 @@
+﻿<html>
+<head><title>Hebrew Tooltip Translations Options</title>
+<script type="text/javascript">
+// Saves options to localStorage.
+function save_options(options) {
+  if(options) {
+    localStorage["options"] = JSON.stringify(options);
+  } else {
+    //read them from the page
+  }
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  var options = localStorage['options'] && JSON.parse(localStorage['options']);
+  if (!options) {
+    options = { "translations": [ { "name": "Hebrew",
+                                     "convert_table": { "/": "q",
+                                                        "'": "w",
+                                                        "ק": "e",
+                                                        "ר": "r",
+                                                        "א": "t",
+                                                        "ט": "y",
+                                                        "ו": "u",
+                                                        "ן": "i",
+                                                        "ם": "o",
+                                                        "פ": "p",
+                                                        "ש": "a",
+                                                        "ד": "s",
+                                                        "ג": "d",
+                                                        "כ": "f",
+                                                        "ע": "g",
+                                                        "י": "h",
+                                                        "ח": "j",
+                                                        "ל": "k",
+                                                        "ך": "l",
+                                                        "ף": ";",
+                                                        ",": "'",
+                                                        "ז": "z",
+                                                        "ס": "x",
+                                                        "ב": "c",
+                                                        "ה": "v",
+                                                        "נ": "b",
+                                                        "מ": "n",
+                                                        "צ": "m",
+                                                        "ת": ",",
+                                                        "ץ": ".",
+                                                        ".": "/" },
+                                     "url_re": "%D7%A5%D7%91%D7%9D%D7%A6",
+                                     "enabled": true
+                                   }
+                                 ],
+                "searches": [ { "name": "Google",
+                                 "search_url_re": "http:\\/\\/www\\.google\\.com\\/search(\\?|.*&)q=([^&]*)",
+                                 "search_url_match_group": 2,
+                                 "enabled": true
+                              }
+                            ]
+              };
+    save_options(options);
+  }
+
+  //document.getElementById("HTTTriggerHover").checked = options['trigger_hover'];
+  //document.getElementById("HTTTriggerHoverDelay").value = options['HTTtooltipDelay'];
+}
+
+</script></head>
+<body onload="restore_options()">
+  <img src="HTT-128.png"><br />
+<!--  <input type="checkbox" id="HTTTriggerHover"/><label for="HTTTriggerHover">Show Tooltip after </label><input type="text" id="HTTTriggerHoverDelay"/><label for="HTTTriggerHover"> milliseconds</label><br />
+  <input type="checkbox" id="HTTTriggerClick"/><label for="HTTTriggerClick">Show Tooltip after clicking on a word</label><br />
+  <input type="checkbox" id="HTTTriggerHighlight"/><label for="HTTTriggerHighlight">Show Tooltip after selecting a word or phrase</label><br />
+  <input type="checkbox" id="HTTTriggerKeyboard"/><label for="HTTTriggerKeyboard">Show Tooltip after pressing </label><input type="text" maxlength=1 id="HTTTriggerKeyboardCharacter"/><label for="HTTTriggerKeyboard"> on the keyboard</label><br />
+  <span class="HTTHeader">Tooltip Location</span><br />
+  &nbsp; &nbsp; <input type="radio" name="HTTLocationX" id="HTTLocationX0" value="0" /><label for="HTTLocationX0">To the left</label>
+  &nbsp; &nbsp; <input type="radio" name="HTTLocationX" id="HTTLocationX1" value="1" /><label for="HTTLocationX1">To the right</label><br />
+  &nbsp; &nbsp; <input type="radio" name="HTTLocationY" id="HTTLocationY1" value="1" /><label for="HTTLocationY1">Below</label>
+  &nbsp; &nbsp; <input type="radio" name="HTTLocationY" id="HTTLocationY0" value="0" /><label for="HTTLocationY0">Above</label><br />
+  <input type="checkbox" id="HTTKeepOnScreen"/><label for="HTTKeepOnScreen">Keep Tooltips on screen</label><br />
+  <button onclick="save_options()">Save</button>-->
+</body>
+</html>
