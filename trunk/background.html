@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <script>
+      function xhr(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(data) {
+          if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+              var data = xhr.responseText;
+              callback(data);
+            } else {
+              callback(null);
+            }
+          }
+        }
+        // Note that any URL fetched here must be matched by a permission in
+        // the manifest.json file!
+        xhr.open('GET', url, true);
+        xhr.send();
+      };
+
+      /**
+       * Handles data sent via chrome.extension.sendRequest().
+       * @param request Object Data sent in the request.
+       * @param sender Object Origin of the request.
+       * @param callback Function The method to call when the request completes.
+       */
+      function onRequest(request, sender, callback) {
+        if (request.action == 'xhr') {
+          xhr(request.url, callback);
+        } else if(request.action == 'localStorage_set') {
+          localStorage[request.attribute] = JSON.stringify(request.value || null);
+          
+          callback();
+        } else if(request.action == 'localStorage_get') {
+          callback(JSON.parse(localStorage[request.attribute] || null) || null);
+        }
+      };
+
+      // Wire up the listener.
+      chrome.extension.onRequest.addListener(onRequest);
+      function tableConvert(convert_table, s) {
+        s = decodeURIComponent(s);
+        var translate_re = "[";
+        var translate = {};
+        for(var key in convert_table) {
+          translate_re += key;
+        }
+        translate_re += "]";
+        translate_re = new RegExp(translate_re, "g");
+        return(s.replace(translate_re, function(match) { return convert_table[match];}));
+      }
+      
+      function fixURL(url) {
+        var options = localStorage['options'] && JSON.parse(localStorage['options']);
+        if(options) {
+          if(url) {
+            for(var current_search_url_re_index = 0; current_search_url_re_index < options["searches"].length; current_search_url_re_index++) {
+              var search_url_re = new RegExp(options["searches"][current_search_url_re_index]["search_url_re"]);
+              var re_result = search_url_re.exec(url);
+              if(re_result && re_result.length > options["searches"][current_search_url_re_index]["search_url_match_group"]) {
+                var search_string = re_result[options["searches"][current_search_url_re_index]["search_url_match_group"]]; //this is the URL that we mistyped
+                for(var current_translation_index = 0; current_translation_index < options["translations"].length; current_translation_index++) {
+                  var url_re = new RegExp(options["translations"][current_translation_index]["url_re"]);
+                  if(url_re.test(search_string)) {
+                    var new_url = tableConvert(options["translations"][current_translation_index]["convert_table"], search_string);
+                    var proto_re = new RegExp("^[a-zA-Z]+\\:\\/\\/");
+                    if(!proto_re.test(new_url)) {
+                      new_url = "http://" + new_url;
+                    }
+                    return(new_url); //we did something
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {chrome.tabs.update(tabId, {'url': fixURL(changeInfo.url)})});
+    </script>
+  </body>
+</html>

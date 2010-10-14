@@ -1,0 +1,10 @@
+{
+  "name": "URL Language Fixer",
+  "version": "0.1",
+  "description": "Fix URLs when typing in the wrong language by accident",
+  "permissions": [
+    "tabs"
+  ],
+  "background_page" : "background.html",
+  "options_page": "options.html"
+}
