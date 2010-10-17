@@ -1,5 +1,5 @@
 ﻿<html>
-<head><title>Hebrew Tooltip Translations Options</title>
+<head><title>URL Language Fixer Options</title>
 <script type="text/javascript">
 const CONVERT_PER_ROW = 6;
 
@@ -48,8 +48,7 @@ function save_options(options) {
       new_search.enabled = search_row.children[3].children[0].checked;
       options["searches"][options["searches"].length] = new_search;
     }
-    alert(JSON.stringify(options)); //just for now, for testing
-    alert(localStorage["options"]);
+    localStorage["options"] = JSON.stringify(options);
   }
 }
 
@@ -77,6 +76,7 @@ function getElementsByClass(searchClass,node,tag) {
   return classElements;
 }
 
+
 function adjust_blanks() {
   //first add a blank translation if the last row is not empty
   var translations_tbody = document.getElementById("translations_tbody");
@@ -85,6 +85,7 @@ function adjust_blanks() {
      !trueForAll(translations_tbody.lastChild.getElementsByTagName("textarea"), function(x) {return(x.value == "")})) {
     add_translation(null, translations_tbody);
   }
+
   convert_tbodies = getElementsByClass("convert_tbody");
   for(var convert_tbody_id = 0; convert_tbody_id < convert_tbodies.length; convert_tbody_id++) {
     //round up the number of blanks per row
@@ -268,59 +269,17 @@ function display_options(options) {
 // Restores select box state to saved value from localStorage.
 function restore_options() {
   var options = localStorage['options'] && JSON.parse(localStorage['options']);
-  if (true || !options) {
-    //this is the default
-    options = { "translations": [ { "name": "Hebrew",
-                                     "convert_table": { "/": "q",
-                                                        "'": "w",
-                                                        "ק": "e",
-                                                        "ר": "r",
-                                                        "א": "t",
-                                                        "ט": "y",
-                                                        "ו": "u",
-                                                        "ן": "i",
-                                                        "ם": "o",
-                                                        "פ": "p",
-                                                        "ש": "a",
-                                                        "ד": "s",
-                                                        "ג": "d",
-                                                        "כ": "f",
-                                                        "ע": "g",
-                                                        "י": "h",
-                                                        "ח": "j",
-                                                        "ל": "k",
-                                                        "ך": "l",
-                                                        "ף": ";",
-                                                        ",": "'",
-                                                        "ז": "z",
-                                                        "ס": "x",
-                                                        "ב": "c",
-                                                        "ה": "v",
-                                                        "נ": "b",
-                                                        "מ": "n",
-                                                        "צ": "m",
-                                                        "ת": ",",
-                                                        "ץ": ".",
-                                                        ".": "/" },
-                                     "url_re": "%D7%A5%D7%91%D7%9D%D7%A6",
-                                     "enabled": true
-                                   }
-                                 ],
-                "searches": [ { "name": "Google",
-                                 "search_url_re": "http:\\/\\/www\\.google\\.com\\/search(\\?|.*&)q=([^&]*)",
-                                 "search_url_match_group": "2",
-                                 "enabled": true
-                              }
-                            ]
-              };
-    save_options(options);
+  if(options) {
+    display_options(options);
+  } else {
+    chrome.extension.sendRequest({"action": "get_default_options"}, restore_options_helper);
   }
+}
+
+function restore_options_helper(options) {
   display_options(options);
 }
 
-function textareaChanged() {
-  alert("foo");
-}
 </script>
 <STYLE type="text/css">
    table {border: 2px solid black; width: 100%}
@@ -328,7 +287,7 @@ function textareaChanged() {
    td {vertical-align: top; height: 100%}
    .fromto {width: 30px;}
    input {width: 100%; change: function() {alert("foo");};}
-   textarea {width: 100%; height:100%; onmouseover: textareaChanged;}
+   textarea {width: 100%; height:100%;}
 </STYLE>
 </head>
 <body onload="restore_options()">
