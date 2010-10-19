@@ -5,6 +5,11 @@
   "permissions": [
     "tabs"
   ],
+  "icons": {
+    "16" : "url-lang-fixer-16.png",
+    "48" : "url-lang-fixer-48.png",
+    "128" : "url-lang-fixer-128.png"
+  },
   "background_page" : "background.html",
   "options_page": "options.html"
 }
