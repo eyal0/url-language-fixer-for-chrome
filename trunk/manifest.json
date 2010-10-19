@@ -1,6 +1,6 @@
 {
   "name": "URL Language Fixer",
-  "version": "0.1",
+  "version": "1.0",
   "description": "Fix URLs when typing in the wrong language by accident",
   "permissions": [
     "tabs"
